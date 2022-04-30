@@ -20,7 +20,7 @@ if (NOT TARGET rapidxml)
         rapidxml
         INTERFACE
         $<BUILD_INTERFACE:${rapidxml_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/rapidxml>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     )
 
     install(FILES ${rapidxml_SOURCE_DIR}/rapidxml.hpp DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/)
