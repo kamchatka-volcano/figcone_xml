@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.18)
 
-project(figcone_xml VERSION 0.9.0 DESCRIPTION "rapidxml parser adapter for figcone library")
+project(figcone_xml VERSION 0.10.0 DESCRIPTION "rapidxml parser adapter for figcone library")
 
 if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     set(FIGCONE_XML_SUBPROJECT OFF)
@@ -10,7 +10,7 @@ endif()
 
 include(external/xml)
 
-find_package(figcone_tree 0.9.0 QUIET)
+find_package(figcone_tree 0.10.0 QUIET)
 if (NOT figcone_tree_FOUND)
     message("Configuration info: figcone_tree library wasn't found on your system, downloading it from the GitHub repository")
     include (external/figcone_tree)
@@ -26,7 +26,17 @@ target_include_directories(
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
-target_link_libraries(figcone_xml INTERFACE figcone::figcone_tree rapidxml)
+target_include_directories(
+    figcone_xml
+    INTERFACE
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/figcone_xml/detail/external>
+)
+target_include_directories(
+    figcone_xml
+    INTERFACE
+    $<BUILD_INTERFACE:${rapidxml_SOURCE_DIR}>
+)
+target_link_libraries(figcone_xml INTERFACE figcone::figcone_tree)
 
 option(ENABLE_TESTS "Enable tests" OFF)
 if (ENABLE_TESTS AND NOT FIGCONE_XML_SUBPROJECT)
@@ -37,7 +47,8 @@ endif()
 option(INSTALL_FIGCONE_XML "Install figcone_xml library unconditionally" OFF)
 if (NOT FIGCONE_XML_SUBPROJECT OR INSTALL_FIGCONE_XML)
     include(GNUInstallDirs)
-    install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/figcone_xml DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+    install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/figcone_xml   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+    install(FILES     ${rapidxml_SOURCE_DIR}/rapidxml.hpp DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/figcone_xml/detail/external)
 
     set(FIGCONE_XML_PACK_PATH ${CMAKE_INSTALL_LIBDIR}/cmake/figcone_xml)
     install(TARGETS figcone_xml
