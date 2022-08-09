@@ -14,19 +14,4 @@ if (NOT TARGET rapidxml)
             BUILD_COMMAND ""
             )
     FetchContent_MakeAvailable(rapidxml)
-
-    add_library(rapidxml INTERFACE)
-    target_include_directories(
-        rapidxml
-        INTERFACE
-        $<BUILD_INTERFACE:${rapidxml_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-    )
-
-    install(FILES ${rapidxml_SOURCE_DIR}/rapidxml.hpp DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/)
-
-    install(
-        TARGETS rapidxml
-        EXPORT ${PROJECT_NAME}-targets
-    )
 endif()
