@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.18)
 
 project(figcone_xml VERSION 0.10.0 DESCRIPTION "rapidxml parser adapter for figcone library")
+include(GNUInstallDirs)
 
 if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     set(FIGCONE_XML_SUBPROJECT OFF)
@@ -46,7 +47,6 @@ endif()
 
 option(INSTALL_FIGCONE_XML "Install figcone_xml library unconditionally" OFF)
 if (NOT FIGCONE_XML_SUBPROJECT OR INSTALL_FIGCONE_XML)
-    include(GNUInstallDirs)
     install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/figcone_xml   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
     install(FILES     ${rapidxml_SOURCE_DIR}/rapidxml.hpp DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/figcone_xml/detail/external)
 
