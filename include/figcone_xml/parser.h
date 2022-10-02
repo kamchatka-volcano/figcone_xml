@@ -5,7 +5,7 @@
 #include <figcone_tree/errors.h>
 #include "detail/paramparser.h"
 #include "detail/stream.h"
-#include <rapidxml.hpp>
+#include "detail/external/rapidxml.hpp"
 #include <regex>
 
 #include <vector>
