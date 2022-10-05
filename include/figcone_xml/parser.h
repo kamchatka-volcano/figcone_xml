@@ -1,4 +1,5 @@
-#pragma once
+#ifndef FIGCONE_XML_PARSER_H
+#define FIGCONE_XML_PARSER_H
 
 #include <figcone_tree/tree.h>
 #include <figcone_tree/iparser.h>
@@ -86,3 +87,5 @@ public:
 };
 
 }
+
+#endif //FIGCONE_XML_PARSER_H

@@ -1,3 +1,6 @@
+#ifndef FIGCONE_XML_PARAMPARSER_H
+#define FIGCONE_XML_PARAMPARSER_H
+
 #include "utils.h"
 #include "stream.h"
 #include <figcone_tree/tree.h>
@@ -61,3 +64,5 @@ inline std::optional<std::vector<std::string>> readParamList(const std::string& 
 }
 
 }
+
+#endif //FIGCONE_XML_PARAMPARSER_H

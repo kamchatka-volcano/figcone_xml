@@ -11,11 +11,13 @@ SealLake_Import(
         GIT_TAG        cmake_maintenance
 )
 SealLake_Download(
-        rapidxml 1.13
         GIT_REPOSITORY https://github.com/dwd/rapidxml.git
         GIT_TAG master
         DESTINATION include/figcone_xml/detail/external
         FILES rapidxml.hpp
+        TEXT_REPLACEMENTS
+            "namespace rapidxml" "namespace figcone::xml::rapidxml"
+            "RAPIDXML_" "FIGCONE_RAPIDXML_"
 )
 
 SealLake_HeaderOnlyLibrary(

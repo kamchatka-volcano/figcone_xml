@@ -1,4 +1,6 @@
-#pragma once
+#ifndef FIGCONE_XML_UTILS_H
+#define FIGCONE_XML_UTILS_H
+
 #include "stream.h"
 #include <figcone_tree/errors.h>
 #include <string>
@@ -60,5 +62,6 @@ inline std::optional<std::string> readQuotedString(Stream& stream)
     throw ConfigError{"String isn't closed", pos};
 }
 
-
 }
+
+#endif //FIGCONE_XML_UTILS_H
