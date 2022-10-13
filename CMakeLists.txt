@@ -13,17 +13,21 @@ SealLake_Import(
 SealLake_Download(
         GIT_REPOSITORY https://github.com/dwd/rapidxml.git
         GIT_TAG master
-        DESTINATION include/figcone_xml/detail/external
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/rapidxml
         FILES rapidxml.hpp
         TEXT_REPLACEMENTS
             "namespace rapidxml" "namespace figcone::xml::rapidxml"
-            "RAPIDXML_" "FIGCONE_RAPIDXML_"
 )
 
-SealLake_HeaderOnlyLibrary(
+SealLake_ObjectLibrary(
         NAMESPACE figcone
+        SOURCES
+            src/paramparser.cpp
+            src/parser.cpp
+            src/utils.cpp
         COMPILE_FEATURES cxx_std_17
-        LIBRARIES figcone::figcone_tree
+        INCLUDES ${CMAKE_CURRENT_BINARY_DIR}/rapidxml
+        INTERFACE_LIBRARIES figcone::figcone_tree
         DEPENDENCIES figcone_tree 0.11.0
 )
 

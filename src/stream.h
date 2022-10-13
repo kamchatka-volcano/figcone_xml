@@ -1,7 +1,7 @@
 #ifndef FIGCONE_XML_STREAM_H
 #define FIGCONE_XML_STREAM_H
 
-#include <figcone_tree/streamposition.h>
+#include "figcone_tree/streamposition.h"
 #include <string>
 #include <istream>
 

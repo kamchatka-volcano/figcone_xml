@@ -1,20 +1,17 @@
-#ifndef FIGCONE_XML_PARAMPARSER_H
-#define FIGCONE_XML_PARAMPARSER_H
-
-#include "utils.h"
+#include "paramparser.h"
 #include "stream.h"
-#include <figcone_tree/tree.h>
-#include <figcone_tree/errors.h>
+#include "utils.h"
+#include "figcone_tree/errors.h"
 #include <utility>
-#include <optional>
 #include <sstream>
 
 namespace figcone::xml::detail {
 
-inline std::optional<std::string> readParam(Stream& stream,
-                                   const std::string& wordSeparator,
-                                   const std::vector<std::string>& paramListValue,
-                                   const std::string& paramName)
+std::optional<std::string> readParam(
+        Stream& stream,
+        const std::string& wordSeparator,
+        const std::vector<std::string>& paramListValue,
+        const std::string& paramName)
 {
     auto quotedParam = readQuotedString(stream);
     if (quotedParam)
@@ -31,7 +28,9 @@ inline std::optional<std::string> readParam(Stream& stream,
     }
 }
 
-inline std::optional<std::vector<std::string>> readParamList(const std::string& paramName, const std::string& paramValue)
+std::optional<std::vector<std::string>> readParamList(
+        const std::string& paramName,
+        const std::string& paramValue)
 {
     auto inputStream = std::stringstream{paramValue};
     auto stream = Stream{inputStream};
@@ -64,5 +63,3 @@ inline std::optional<std::vector<std::string>> readParamList(const std::string& 
 }
 
 }
-
-#endif //FIGCONE_XML_PARAMPARSER_H

@@ -49,6 +49,28 @@ TEST(TestNodeListParser, Basic)
     }
 }
 
+TEST(TestNodeListParser, Empty)
+{
+    auto result = parse(R"(
+    <root testStr = "Hello">
+        <testNodes _list_="1">
+        </testNodes>
+    </root>
+    )");
+
+    auto& tree = result.asItem();
+    ASSERT_EQ(tree.paramsCount(), 1);
+    ASSERT_TRUE(tree.hasParam("testStr"));
+    ASSERT_TRUE(tree.param("testStr").isItem());
+    EXPECT_EQ(tree.param("testStr").value(), "Hello");
+    ASSERT_EQ(tree.nodesCount(), 1);
+    ASSERT_TRUE(tree.hasNode("testNodes"));
+    ASSERT_TRUE(tree.node("testNodes").isList());
+    auto& testNodes = tree.node("testNodes").asList();
+    ASSERT_EQ(testNodes.count(), 0);
+}
+
+
 TEST(TestNodeListParser, Nested)
 {
    auto result = parse(R"(
