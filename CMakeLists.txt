@@ -10,7 +10,7 @@ SealLake_Import(
         GIT_REPOSITORY https://github.com/kamchatka-volcano/figcone_tree.git
         GIT_TAG        cmake_maintenance
 )
-SealLake_Download(
+SealLake_Bundle(
         GIT_REPOSITORY https://github.com/dwd/rapidxml.git
         GIT_TAG master
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/rapidxml
