@@ -49,11 +49,48 @@ TEST(TestNodeListParser, Basic)
     }
 }
 
+TEST(TestNodeListParser, BasicExplicitList)
+{
+    auto result = parse(R"(
+    <root testStr = "Hello">
+        <testNodes _list="1">
+           <el testInt = "3" />
+           <el testInt = "2" />
+        </testNodes>
+    </root>
+    )");
+
+    auto& tree = result.asItem();
+    ASSERT_EQ(tree.paramsCount(), 1);
+    ASSERT_TRUE(tree.hasParam("testStr"));
+    ASSERT_TRUE(tree.param("testStr").isItem());
+    EXPECT_EQ(tree.param("testStr").value(), "Hello");
+    ASSERT_EQ(tree.nodesCount(), 1);
+    ASSERT_TRUE(tree.hasNode("testNodes"));
+    ASSERT_TRUE(tree.node("testNodes").isList());
+    auto& testNodes = tree.node("testNodes").asList();
+    ASSERT_EQ(testNodes.count(), 2);
+    {
+        auto& nodeData = testNodes.node(0).asItem();
+        ASSERT_EQ(nodeData.paramsCount(), 1);
+        ASSERT_TRUE(nodeData.hasParam("testInt"));
+        ASSERT_TRUE(nodeData.param("testInt").isItem());
+        EXPECT_EQ(nodeData.param("testInt").value(), "3");
+    }
+    {
+        auto& nodeData = testNodes.node(1).asItem();
+        ASSERT_EQ(nodeData.paramsCount(), 1);
+        ASSERT_TRUE(nodeData.hasParam("testInt"));
+        ASSERT_TRUE(nodeData.param("testInt").isItem());
+        EXPECT_EQ(nodeData.param("testInt").value(), "2");
+    }
+}
+
 TEST(TestNodeListParser, Empty)
 {
     auto result = parse(R"(
     <root testStr = "Hello">
-        <testNodes _list_="1">
+        <testNodes _list="1">
         </testNodes>
     </root>
     )");

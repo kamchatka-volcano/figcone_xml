@@ -31,7 +31,7 @@ template<typename T>
 bool isListNode(T& node)
 {
     for (auto attr = node.first_attribute(); attr != nullptr; attr = attr->next_attribute())
-        if (name(attr) == "_list_")
+        if (name(attr) == "_list")
             return true;
     auto child = node.first_node();
     if (child != nullptr && name(child) == "_")
@@ -43,7 +43,7 @@ template<typename T>
 bool hasAttributes(T& node)
 {
     for (auto attr = node.first_attribute(); attr != nullptr; attr = attr->next_attribute()) {
-        if (name(attr) == "_list_")
+        if (name(attr) == "_list")
             continue;
         return true;
     }
@@ -53,7 +53,7 @@ bool hasAttributes(T& node)
 void parseXml(const rapidxml::xml_node<char>* xml, figcone::TreeNode& node)
 {
     for (auto attr = xml->first_attribute(); attr != nullptr; attr = attr->next_attribute()) {
-        if (name(attr) == "_list_")
+        if (name(attr) == "_list")
             continue;
         auto paramList = readParamList(name(attr), value(attr));
         if (paramList)
