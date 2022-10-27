@@ -30,7 +30,7 @@ SealLake_ObjectLibrary(
         INTERFACE_LIBRARIES
             figcone::figcone_tree
         DEPENDENCIES
-            figcone_tree 0.11.0
+            figcone_tree 0.12.0
 )
 
 SealLake_OptionalBuildSteps(tests)
