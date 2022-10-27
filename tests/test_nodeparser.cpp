@@ -34,6 +34,27 @@ TEST(TestNodeParser, SingleNodeSingleLevel)
     EXPECT_EQ(aNode.param("testInt").value(), "10");
 }
 
+TEST(TestNodeParser, SingleEmptyNode)
+{
+    auto result = parse(R"(
+    <root foo="5" bar="test">
+        <a> </a>
+    </root>
+    )");
+
+    auto& tree = result.asItem();
+    ASSERT_EQ(tree.paramsCount(), 2);
+    ASSERT_EQ(tree.hasParam("foo"), 1);
+    ASSERT_EQ(tree.hasParam("bar"), 1);
+    EXPECT_EQ(tree.param("foo").value(), "5");
+    EXPECT_EQ(tree.param("bar").value(), "test");
+    ASSERT_EQ(tree.nodesCount(), 1);
+    ASSERT_EQ(tree.hasNode("a"), 1);
+    auto& aNode = tree.node("a").asItem();
+    ASSERT_EQ(aNode.paramsCount(), 0);
+}
+
+
 TEST(TestNodeParser, MultiNodeSingleLevel)
 {
     auto result = parse(R"(
