@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.18)
 
-project(figcone_xml VERSION 0.12.0 DESCRIPTION "rapidxml parser adapter for figcone library")
+project(figcone_xml VERSION 0.12.1 DESCRIPTION "rapidxml parser adapter for figcone library")
 include(GNUInstallDirs)
 include(external/seal_lake)
 
