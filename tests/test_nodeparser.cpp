@@ -1,6 +1,6 @@
 #include "assert_exception.h"
-#include <figcone_xml/parser.h>
 #include <figcone_tree/errors.h>
+#include <figcone_xml/parser.h>
 #include <gtest/gtest.h>
 #include <sstream>
 
@@ -53,7 +53,6 @@ TEST(TestNodeParser, SingleEmptyNode)
     auto& aNode = tree.node("a").asItem();
     ASSERT_EQ(aNode.paramsCount(), 0);
 }
-
 
 TEST(TestNodeParser, MultiNodeSingleLevel)
 {
@@ -124,14 +123,18 @@ TEST(TestNodeParser, MultiLevel)
 
 TEST(TestNodeParser, XmlError)
 {
-    assert_exception<figcone::ConfigError>([&]{
-        parse(R"(
+    assert_exception<figcone::ConfigError>(
+            [&]
+            {
+                parse(R"(
 <root foo="5" bar="test">
     <a testInt="10" </a>
 </root>)");
-    }, [](const figcone::ConfigError& e){
-        ASSERT_EQ(std::string{e.what()}, "[line:3, column:21] expected >");
-    });
+            },
+            [](const figcone::ConfigError& e)
+            {
+                ASSERT_EQ(std::string{e.what()}, "[line:3, column:21] expected >");
+            });
 }
 
-}
+} //namespace test_nodeparser

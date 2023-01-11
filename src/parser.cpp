@@ -1,13 +1,12 @@
-#include <figcone_xml/parser.h>
 #include "paramparser.h"
 #include "stream.h"
-#include <figcone_tree/errors.h>
 #include <rapidxml.hpp>
-#include <regex>
-#include <vector>
-#include <string>
+#include <figcone_tree/errors.h>
+#include <figcone_xml/parser.h>
 #include <iterator>
-
+#include <regex>
+#include <string>
+#include <vector>
 
 namespace figcone::xml::detail {
 namespace {
@@ -71,7 +70,8 @@ void parseXml(const rapidxml::xml_node<char>* xml, figcone::TreeNode& node)
             auto& newNode = node.asItem().addNodeList(name(child));
             for (auto item = child->first_node(); item != nullptr; item = item->next_sibling())
                 parseXml(item, newNode.asList().addNode());
-        } else {
+        }
+        else {
             auto& newNode = node.asItem().addNode(name(child));
             parseXml(child, newNode);
         }
@@ -87,10 +87,10 @@ figcone::StreamPosition getErrorPosition(std::string& input, const rapidxml::par
         stream.skip(1);
     return stream.position();
 }
-}
-}
+} //namespace
+} //namespace figcone::xml::detail
 
-namespace figcone::xml{
+namespace figcone::xml {
 TreeNode Parser::parse(std::istream& stream)
 {
     auto input = detail::getStreamContent(stream);
@@ -98,7 +98,7 @@ TreeNode Parser::parse(std::istream& stream)
     try {
         xml.parse<0>(input.data());
     }
-    catch (const rapidxml::parse_error& e){
+    catch (const rapidxml::parse_error& e) {
         throw figcone::ConfigError{e.what(), detail::getErrorPosition(input, e)};
     }
     auto tree = figcone::makeTreeRoot();
@@ -106,4 +106,4 @@ TreeNode Parser::parse(std::istream& stream)
     return tree;
 }
 
-}
+} //namespace figcone::xml

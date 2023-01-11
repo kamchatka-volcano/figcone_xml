@@ -36,7 +36,6 @@ TEST(TestParamListParser, BasicAltWhitespace)
     EXPECT_EQ(tree.param("testIntList").valueList(), (std::vector<std::string>{"1", "2", "3"}));
 }
 
-
 TEST(TestParamListParser, WithString)
 {
     auto result = parseParam(R"(<root testStrList = "['Hello', world, ' ']" />)");
@@ -71,48 +70,68 @@ TEST(TestParamListParser, EmptyAltWhitespace)
 
 TEST(TestParamListParser, EmptyLastElementError)
 {
-    assert_exception<figcone::ConfigError>([&]{
-        parseParam(R"(<root testIntList ="[1,2,]" />)");
-    }, [](const figcone::ConfigError& e){
-        ASSERT_EQ(std::string{e.what()}, "Parameter list 'testIntList' element is missing");
-    });
+    assert_exception<figcone::ConfigError>(
+            [&]
+            {
+                parseParam(R"(<root testIntList ="[1,2,]" />)");
+            },
+            [](const figcone::ConfigError& e)
+            {
+                ASSERT_EQ(std::string{e.what()}, "Parameter list 'testIntList' element is missing");
+            });
 }
 
 TEST(TestParamListParser, EmptyFirstElementError)
 {
-    assert_exception<figcone::ConfigError>([&]{
-        parseParam(R"(<root testIntList = "[,1,2]" />)");
-    }, [](const figcone::ConfigError& e){
-        ASSERT_EQ(std::string{e.what()}, "Parameter list 'testIntList' element is missing");
-    });
+    assert_exception<figcone::ConfigError>(
+            [&]
+            {
+                parseParam(R"(<root testIntList = "[,1,2]" />)");
+            },
+            [](const figcone::ConfigError& e)
+            {
+                ASSERT_EQ(std::string{e.what()}, "Parameter list 'testIntList' element is missing");
+            });
 }
 
 TEST(TestParamListParser, EmptyElementError)
 {
-    assert_exception<figcone::ConfigError>([&]{
-        parseParam(R"(<root testIntList = "[1, ,3 ]" />)");
-    }, [](const figcone::ConfigError& e){
-        ASSERT_EQ(std::string{e.what()}, "Parameter list 'testIntList' element is missing");
-    });
+    assert_exception<figcone::ConfigError>(
+            [&]
+            {
+                parseParam(R"(<root testIntList = "[1, ,3 ]" />)");
+            },
+            [](const figcone::ConfigError& e)
+            {
+                ASSERT_EQ(std::string{e.what()}, "Parameter list 'testIntList' element is missing");
+            });
 }
 
 TEST(TestParamListParser, EmptyLastElementAltWhitespaceError)
 {
-    assert_exception<figcone::ConfigError>([&]{
-        parseParam(R"(<root testIntList ="[1,2,
+    assert_exception<figcone::ConfigError>(
+            [&]
+            {
+                parseParam(R"(<root testIntList ="[1,2,
 ]" />)");
-    }, [](const figcone::ConfigError& e){
-        ASSERT_EQ(std::string{e.what()}, "Parameter list 'testIntList' element is missing");
-    });
+            },
+            [](const figcone::ConfigError& e)
+            {
+                ASSERT_EQ(std::string{e.what()}, "Parameter list 'testIntList' element is missing");
+            });
 }
 
 TEST(TestParamListParser, EmptyWithSeparatorError)
 {
-    assert_exception<figcone::ConfigError>([&]{
-        parseParam(R"(<root testIntList = "[,]" />)");
-    }, [](const figcone::ConfigError& e){
-        ASSERT_EQ(std::string{e.what()}, "Parameter list 'testIntList' element is missing");
-    });
+    assert_exception<figcone::ConfigError>(
+            [&]
+            {
+                parseParam(R"(<root testIntList = "[,]" />)");
+            },
+            [](const figcone::ConfigError& e)
+            {
+                ASSERT_EQ(std::string{e.what()}, "Parameter list 'testIntList' element is missing");
+            });
 }
 
-}
+} //namespace test_paramlistparser

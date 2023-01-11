@@ -2,8 +2,8 @@
 #include "stream.h"
 #include "utils.h"
 #include "figcone_tree/errors.h"
-#include <utility>
 #include <sstream>
+#include <utility>
 
 namespace figcone::xml::detail {
 
@@ -28,9 +28,7 @@ std::optional<std::string> readParam(
     }
 }
 
-std::optional<std::vector<std::string>> readParamList(
-        const std::string& paramName,
-        const std::string& paramValue)
+std::optional<std::vector<std::string>> readParamList(const std::string& paramName, const std::string& paramValue)
 {
     auto inputStream = std::stringstream{paramValue};
     auto stream = Stream{inputStream};
@@ -62,4 +60,4 @@ std::optional<std::vector<std::string>> readParamList(
     throw ConfigError{"Wrong parameter list '" + paramName + "' format: missing ']' at the end"};
 }
 
-}
+} //namespace figcone::xml::detail
