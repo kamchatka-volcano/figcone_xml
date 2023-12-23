@@ -21,7 +21,7 @@ TEST(TestNodeParser, SingleNodeSingleLevel)
     </root>
     )");
 
-    auto& tree = result.asItem();
+    auto& tree = result.root().asItem();
     ASSERT_EQ(tree.paramsCount(), 2);
     ASSERT_EQ(tree.hasParam("foo"), 1);
     ASSERT_EQ(tree.hasParam("bar"), 1);
@@ -34,7 +34,7 @@ TEST(TestNodeParser, SingleNodeSingleLevel)
     EXPECT_EQ(aNode.param("testInt").value(), "10");
 }
 
-TEST(TestNodeParser, SingleEmptyNode)
+TEST(TestNodeParser, SingleEmptyNodeItemOrListAccess)
 {
     auto result = parse(R"(
     <root foo="5" bar="test">
@@ -42,7 +42,7 @@ TEST(TestNodeParser, SingleEmptyNode)
     </root>
     )");
 
-    auto& tree = result.asItem();
+    auto& tree = result.root().asItem();
     ASSERT_EQ(tree.paramsCount(), 2);
     ASSERT_EQ(tree.hasParam("foo"), 1);
     ASSERT_EQ(tree.hasParam("bar"), 1);
@@ -52,6 +52,8 @@ TEST(TestNodeParser, SingleEmptyNode)
     ASSERT_EQ(tree.hasNode("a"), 1);
     auto& aNode = tree.node("a").asItem();
     ASSERT_EQ(aNode.paramsCount(), 0);
+    auto& aNodeList = tree.node("a").asList();
+    ASSERT_EQ(aNodeList.size(), 0);
 }
 
 TEST(TestNodeParser, MultiNodeSingleLevel)
@@ -63,7 +65,7 @@ TEST(TestNodeParser, MultiNodeSingleLevel)
     </root>
     )");
 
-    auto& tree = result.asItem();
+    auto& tree = result.root().asItem();
     ASSERT_EQ(tree.paramsCount(), 2);
     ASSERT_EQ(tree.hasParam("foo"), 1);
     ASSERT_EQ(tree.hasParam("bar"), 1);
@@ -95,7 +97,7 @@ TEST(TestNodeParser, MultiLevel)
     </root>
     )");
 
-    auto& tree = result.asItem();
+    auto& tree = result.root().asItem();
     ASSERT_EQ(tree.paramsCount(), 2);
     ASSERT_EQ(tree.hasParam("foo"), 1);
     ASSERT_EQ(tree.hasParam("bar"), 1);

@@ -4,6 +4,7 @@
 #include <figcone_tree/errors.h>
 #include <figcone_xml/parser.h>
 #include <iterator>
+#include <optional>
 #include <regex>
 #include <string>
 #include <vector>
@@ -29,50 +30,65 @@ std::string value(T& node)
 }
 
 template<typename T>
-bool isListNode(T& node)
-{
-    for (auto attr = node.first_attribute(); attr != nullptr; attr = attr->next_attribute())
-        if (name(attr) == "_list")
-            return true;
-    auto child = node.first_node();
-    if (child != nullptr && name(child) == "_")
-        return true;
-    return false;
-}
-
-template<typename T>
 bool hasAttributes(T& node)
 {
-    for (auto attr = node.first_attribute(); attr != nullptr; attr = attr->next_attribute()) {
-        if (name(attr) == "_list")
-            continue;
-        return true;
-    }
-    return false;
+    return node.first_attribute() != nullptr;
+}
+
+struct ListNodeDetectionTraits {
+    bool withAttributes = false;
+    int childrenCount;
+    bool childrenHaveSameName = false;
+};
+
+template<typename T>
+ListNodeDetectionTraits detectListNode(T& node)
+{
+    const auto withAttributes = hasAttributes(node);
+    const auto [childrenCount, childrenHaveSameName] = [&]() -> std::tuple<int, bool>
+    {
+        auto count = 0;
+        std::optional<std::string> childName;
+        for (auto child = node.first_node(); child != nullptr; child = child->next_sibling()) {
+            count++;
+            if (!childName.has_value()) {
+                childName = name(child);
+                continue;
+            }
+            else if (childName.value() != name(child))
+                return {count, false};
+        }
+        return {count, childName.has_value()};
+    }();
+
+    return {withAttributes, childrenCount, childrenHaveSameName};
 }
 
 void parseXml(const rapidxml::xml_node<char>* xml, figcone::TreeNode& node)
 {
-    for (auto attr = xml->first_attribute(); attr != nullptr; attr = attr->next_attribute()) {
-        if (name(attr) == "_list")
-            continue;
-        auto paramList = readParamList(name(attr), value(attr));
-        if (paramList)
-            node.asItem().addParamList(name(attr), *paramList);
-        else
-            node.asItem().addParam(name(attr), value(attr));
-    }
+    const auto [withAttributes, childrenCount, childrenHaveSameName] = detectListNode(*xml);
+    if (withAttributes && childrenCount > 1 && childrenHaveSameName)
+        throw ConfigError{"Bad node list '" + name(xml) + "' - node lists can't contain attributes"};
 
-    for (auto child = xml->first_node(); child != nullptr; child = child->next_sibling()) {
-        if (isListNode(*child)) {
-            if (hasAttributes(*child))
-                throw figcone::ConfigError("Node list '" + name(child) + "' cannot have attributes");
-            auto& newNode = node.asItem().addNodeList(name(child));
-            for (auto item = child->first_node(); item != nullptr; item = item->next_sibling())
-                parseXml(item, newNode.asList().addNode());
+    const auto isListNode = !withAttributes && childrenHaveSameName;
+    if (isListNode) {
+        if (node.isRoot())
+            throw ConfigError{"Root node can't be a node list"};
+
+        for (auto child = xml->first_node(); child != nullptr; child = child->next_sibling()) {
+            parseXml(child, node.asList().emplaceBackAny(name(child)));
         }
-        else {
-            auto& newNode = node.asItem().addNode(name(child));
+    }
+    else {
+        for (auto attr = xml->first_attribute(); attr != nullptr; attr = attr->next_attribute()) {
+            auto paramList = readParamList(name(attr), value(attr));
+            if (paramList)
+                node.asItem().addParamList(name(attr), *paramList);
+            else
+                node.asItem().addParam(name(attr), value(attr));
+        }
+        for (auto child = xml->first_node(); child != nullptr; child = child->next_sibling()) {
+            auto& newNode = node.asItem().addAny(name(child));
             parseXml(child, newNode);
         }
     }
@@ -91,7 +107,7 @@ figcone::StreamPosition getErrorPosition(std::string& input, const rapidxml::par
 } //namespace figcone::xml::detail
 
 namespace figcone::xml {
-TreeNode Parser::parse(std::istream& stream)
+Tree Parser::parse(std::istream& stream)
 {
     auto input = detail::getStreamContent(stream);
     auto xml = rapidxml::xml_document{};
@@ -101,8 +117,9 @@ TreeNode Parser::parse(std::istream& stream)
     catch (const rapidxml::parse_error& e) {
         throw figcone::ConfigError{e.what(), detail::getErrorPosition(input, e)};
     }
-    auto tree = figcone::makeTreeRoot();
-    detail::parseXml(xml.first_node(), tree);
+    auto treeRoot = figcone::makeTreeRoot();
+    detail::parseXml(xml.first_node(), *treeRoot);
+    auto tree = Tree{std::move(treeRoot)};
     return tree;
 }
 

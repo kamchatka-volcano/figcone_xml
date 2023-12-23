@@ -15,7 +15,7 @@ auto parseParam(const std::string& str)
 TEST(TestParamListParser, Basic)
 {
     auto result = parseParam(R"(<root testIntList = "[1, 2, 3]" />)");
-    auto& tree = result.asItem();
+    auto& tree = result.root().asItem();
     ASSERT_EQ(tree.paramsCount(), 1);
     EXPECT_EQ(tree.param("testIntList").valueList(), (std::vector<std::string>{"1", "2", "3"}));
 }
@@ -23,7 +23,7 @@ TEST(TestParamListParser, Basic)
 TEST(TestParamListParser, BasicWithoutMacro)
 {
     auto result = parseParam(R"(<root testIntList = "[1, 2, 3]"/>)");
-    auto& tree = result.asItem();
+    auto& tree = result.root().asItem();
     ASSERT_EQ(tree.paramsCount(), 1);
     EXPECT_EQ(tree.param("testIntList").valueList(), (std::vector<std::string>{"1", "2", "3"}));
 }
@@ -31,7 +31,7 @@ TEST(TestParamListParser, BasicWithoutMacro)
 TEST(TestParamListParser, BasicAltWhitespace)
 {
     auto result = parseParam(R"(<root testIntList = "[1,2,3]" />)");
-    auto& tree = result.asItem();
+    auto& tree = result.root().asItem();
     ASSERT_EQ(tree.paramsCount(), 1);
     EXPECT_EQ(tree.param("testIntList").valueList(), (std::vector<std::string>{"1", "2", "3"}));
 }
@@ -39,7 +39,7 @@ TEST(TestParamListParser, BasicAltWhitespace)
 TEST(TestParamListParser, WithString)
 {
     auto result = parseParam(R"(<root testStrList = "['Hello', world, ' ']" />)");
-    auto& tree = result.asItem();
+    auto& tree = result.root().asItem();
     EXPECT_EQ(tree.param("testStrList").valueList(), (std::vector<std::string>{"Hello", "world", " "}));
 }
 
@@ -49,14 +49,14 @@ TEST(TestParamListParser, WithStringAltWhitespace)
 ,  world,
  ''
  ]" />)");
-    auto& tree = result.asItem();
+    auto& tree = result.root().asItem();
     EXPECT_EQ(tree.param("testStrList").valueList(), (std::vector<std::string>{"Hello", "world", ""}));
 }
 
 TEST(TestParamListParser, Empty)
 {
     auto result = parseParam(R"(<root testIntList = "[]" />)");
-    auto& tree = result.asItem();
+    auto& tree = result.root().asItem();
     EXPECT_EQ(tree.param("testIntList").valueList(), (std::vector<std::string>{}));
 }
 
@@ -64,7 +64,7 @@ TEST(TestParamListParser, EmptyAltWhitespace)
 {
     auto result = parseParam(R"(<root testIntList = "[
  ]" />)");
-    auto& tree = result.asItem();
+    auto& tree = result.root().asItem();
     EXPECT_EQ(tree.param("testIntList").valueList(), (std::vector<std::string>{}));
 }
 
