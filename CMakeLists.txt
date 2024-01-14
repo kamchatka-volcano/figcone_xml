@@ -12,6 +12,7 @@ SealLake_Import(
 )
 SealLake_Bundle(
         NAME figcone_rapidxml
+        SKIP_LOAD
         GIT_REPOSITORY https://github.com/dwd/rapidxml.git
         GIT_TAG master
         TEXT_REPLACEMENTS
