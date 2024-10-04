@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.18)
 
-project(figcone_xml VERSION 1.1.0 DESCRIPTION "rapidxml parser adapter for figcone library")
+project(figcone_xml VERSION 1.2.0 DESCRIPTION "rapidxml parser adapter for figcone library")
 include(external/seal_lake)
 
 SealLake_IsInstallEnabled(INSTALL_FIGCONE_TREE)
@@ -13,7 +13,7 @@ SealLake_Bundle(
         NAME figcone_rapidxml
         SKIP_LOAD
         GIT_REPOSITORY https://github.com/dwd/rapidxml.git
-        GIT_TAG master
+        GIT_TAG v1.0.0
         TEXT_REPLACEMENTS
             "namespace rapidxml" "namespace figcone::xml::rapidxml"
 )
